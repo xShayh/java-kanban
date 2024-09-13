@@ -7,7 +7,7 @@ import model.Subtask;
 import java.util.ArrayList;
 
 public interface TaskManager {
-    public ArrayList<Task> getHistory();
+    ArrayList<Task> getHistory();
 
     Task createTask(Task task);
 
