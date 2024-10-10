@@ -7,7 +7,7 @@ import controllers.Managers;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { // Это не доп. задание, личные тесты
         TaskManager taskManager = Managers.getDefault();
 
         Task task1 = taskManager.createTask(new Task("Task1", "Первая задача", Status.NEW));

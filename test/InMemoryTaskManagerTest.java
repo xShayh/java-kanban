@@ -1,3 +1,4 @@
+import controllers.InMemoryHistoryManager;
 import controllers.Managers;
 import controllers.TaskManager;
 import model.Epic;
@@ -12,11 +13,13 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryTaskManagerTest {
-    private TaskManager tm;
+    public TaskManager tm;
+    public InMemoryHistoryManager hm;
 
     @BeforeEach
     void beforeEach() {
         tm = Managers.getDefault();
+        hm = new InMemoryHistoryManager();
     }
 
     @Test
@@ -56,23 +59,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void historyDeletesFirstTaskAfterMaxHistorySizeReached() {
-        ArrayList<Task> expectedArray = new ArrayList<>();
-        Task task = tm.createTask(new Task("task", "Описание", Status.NEW));
-        Task taskReplacingLastTask = tm.createTask(new Task("taskReplacingLastTask", "Описание", Status.NEW));
-        for (int i = 0; i < 10; i++) {
-            task = tm.getTask(task.getId());
-            expectedArray.add(task);
-        }
-        taskReplacingLastTask = tm.getTask(taskReplacingLastTask.getId());
-        expectedArray.remove(9);
-        expectedArray.add(taskReplacingLastTask);
-        ArrayList<Task> realArray = tm.getHistory();
-        assertEquals(expectedArray, realArray);
-    }
-
-    @Test
-    public void taskNameAndDescriptionCorrectly() {
+    public void taskNameAndDescriptionUpdatedCorrectly() {
         Task task = tm.createTask(new Task("Задача", "Описание", Status.NEW));
         task.setName("Новое имя задачи");
         task.setDescription("Новое описание задачи");
@@ -90,5 +77,14 @@ class InMemoryTaskManagerTest {
         assertEquals(1, taskId1.getId());
         assertEquals(2, epicId2.getId());
         assertEquals(3, subtaskId3.getId());
+    }
+
+    @Test
+    public void historyCantStoreSameTaskTwice() {
+        int expectedHistoryLength = 1;
+        Task task = tm.createTask(new Task("task" , "Задача", Status.NEW));
+        hm.add(task);
+        hm.add(task);
+        assertEquals(expectedHistoryLength, hm.getHistory().size());
     }
 }
