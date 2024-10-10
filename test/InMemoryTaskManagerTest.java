@@ -81,10 +81,17 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void historyCantStoreSameTaskTwice() {
-        int expectedHistoryLength = 1;
         Task task = tm.createTask(new Task("task" , "Задача", Status.NEW));
         hm.add(task);
         hm.add(task);
-        assertEquals(expectedHistoryLength, hm.getHistory().size());
+        assertEquals(1, hm.getHistory().size());
+    }
+
+    @Test
+    public void tasksCanBeDeletedFromHistory() {
+        Task task = tm.createTask(new Task("task" , "Задача", Status.NEW));
+        hm.add(task);
+        hm.remove(task.getId());
+        assertEquals(0, hm.getHistory().size());
     }
 }
