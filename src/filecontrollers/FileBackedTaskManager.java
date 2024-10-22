@@ -38,7 +38,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         Task task = Task.getTaskFromFile(line);
                         fbTaskManager.createTask(task);
                     }
-                    lastId = Integer.parseInt(values[0]);
+                    if (Integer.parseInt(values[0]) > lastId) {
+                        lastId = Integer.parseInt(values[0]);
+                    }
                 }
             }
             fbTaskManager.setIdCounter(++lastId);
