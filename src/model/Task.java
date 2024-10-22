@@ -1,6 +1,6 @@
-package Model;
+package model;
 
-import FileManagerControllers.TaskType;
+import filecontrollers.TaskType;
 
 import java.util.Objects;
 
