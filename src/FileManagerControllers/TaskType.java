@@ -1,4 +1,4 @@
-package fileManagerControllers;
+package FileManagerControllers;
 
 public enum TaskType {
     TASK,

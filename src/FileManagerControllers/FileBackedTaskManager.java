@@ -1,9 +1,9 @@
-package fileManagerControllers;
+package FileManagerControllers;
 
-import controllers.InMemoryTaskManager;
-import model.Epic;
-import model.Subtask;
-import model.Task;
+import Controllers.InMemoryTaskManager;
+import Model.Epic;
+import Model.Subtask;
+import Model.Task;
 
 import java.io.BufferedWriter;
 import java.io.File;

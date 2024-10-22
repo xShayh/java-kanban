@@ -1,10 +1,10 @@
-import controllers.InMemoryHistoryManager;
-import controllers.Managers;
-import controllers.TaskManager;
-import model.Epic;
-import model.TaskStatus;
-import model.Subtask;
-import model.Task;
+import Controllers.InMemoryHistoryManager;
+import Controllers.Managers;
+import Controllers.TaskManager;
+import Model.Epic;
+import Model.TaskStatus;
+import Model.Subtask;
+import Model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

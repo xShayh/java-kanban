@@ -1,4 +1,4 @@
-package model;
+package Model;
 
 public class Subtask extends Task {
     private final int epicId;

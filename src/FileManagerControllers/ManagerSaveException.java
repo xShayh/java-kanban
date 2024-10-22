@@ -1,4 +1,4 @@
-package fileManagerControllers;
+package FileManagerControllers;
 
 public class ManagerSaveException extends RuntimeException {
     public ManagerSaveException(String message, Throwable cause) {

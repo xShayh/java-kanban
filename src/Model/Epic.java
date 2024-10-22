@@ -1,6 +1,4 @@
-package model;
-
-import fileManagerControllers.TaskType;
+package Model;
 
 import java.util.ArrayList;
 

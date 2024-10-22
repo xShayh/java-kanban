@@ -1,9 +1,9 @@
-package controllers;
+package Controllers;
 
-import model.Epic;
-import model.TaskStatus;
-import model.Subtask;
-import model.Task;
+import Model.Epic;
+import Model.TaskStatus;
+import Model.Subtask;
+import Model.Task;
 
 import java.util.HashMap;
 import java.util.ArrayList;

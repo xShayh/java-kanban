@@ -1,8 +1,8 @@
-package controllers;
+package Controllers;
 
 import java.util.ArrayList;
 
-import model.Task;
+import Model.Task;
 
 public interface HistoryManager {
     void add(Task task);
