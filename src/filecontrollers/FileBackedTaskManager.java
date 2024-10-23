@@ -1,6 +1,7 @@
 package filecontrollers;
 
 import controllers.InMemoryTaskManager;
+import exceptions.ManagerSaveException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -19,7 +20,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
+    public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager fbTaskManager = new FileBackedTaskManager(file);
         try {
             int lastId = 0;
@@ -46,8 +47,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             fbTaskManager.setIdCounter(++lastId);
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка при загрузке данных из файла: " + file.getName(), e);
-        } catch (Exception e) {
-            throw new ManagerSaveException("Произошла непредвиденная ошибка в файле: " + file.getName(), e);
         }
         return fbTaskManager;
     }
