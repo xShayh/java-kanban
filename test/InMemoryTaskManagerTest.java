@@ -2,7 +2,7 @@ import controllers.InMemoryHistoryManager;
 import controllers.Managers;
 import controllers.TaskManager;
 import model.Epic;
-import model.Status;
+import model.TaskStatus;
 import model.Subtask;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,35 +24,35 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void taskStatusUpdatesCorrectly() {
-        Task task = tm.createTask(new Task("Задача", "Описание", Status.NEW));
-        assertEquals(Status.NEW, task.getStatus());
-        task.setStatus(Status.IN_PROGRESS);
-        assertEquals(Status.IN_PROGRESS, task.getStatus());
-        task.setStatus(Status.DONE);
-        assertEquals(Status.DONE, task.getStatus());
+        Task task = tm.createTask(new Task("Задача", "Описание", TaskStatus.NEW));
+        assertEquals(TaskStatus.NEW, task.getStatus());
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        assertEquals(TaskStatus.IN_PROGRESS, task.getStatus());
+        task.setStatus(TaskStatus.DONE);
+        assertEquals(TaskStatus.DONE, task.getStatus());
     }
 
     @Test
     public void epicStatusUpdatesDependingOnSubtasks() {
         Epic epic = tm.createEpic(new Epic("Эпик", "Описание"));
-        assertEquals(Status.NEW, epic.getStatus());
-        Subtask subtask1 = tm.createSubtask(new Subtask("1 подзадача", "Описание1", Status.IN_PROGRESS, epic.getId()));
-        assertEquals(Status.IN_PROGRESS, epic.getStatus());
-        Subtask subtask2 = tm.createSubtask(new Subtask("2 подзадача", "Описание2", Status.DONE, epic.getId()));
-        assertEquals(Status.IN_PROGRESS, epic.getStatus());
-        subtask1.setStatus(Status.DONE);
+        assertEquals(TaskStatus.NEW, epic.getStatus());
+        Subtask subtask1 = tm.createSubtask(new Subtask("1 подзадача", "Описание1", TaskStatus.IN_PROGRESS, epic.getId()));
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
+        Subtask subtask2 = tm.createSubtask(new Subtask("2 подзадача", "Описание2", TaskStatus.DONE, epic.getId()));
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
+        subtask1.setStatus(TaskStatus.DONE);
         tm.updateSubtask(subtask1);
-        assertEquals(Status.DONE, epic.getStatus());
+        assertEquals(TaskStatus.DONE, epic.getStatus());
     }
 
     @Test
     public void viewedTasksAreSavedInHistory() {
         ArrayList<Task> expectedArray = new ArrayList<>();
-        Task task = tm.createTask(new Task("Задача", "Описание", Status.NEW));
+        Task task = tm.createTask(new Task("Задача", "Описание", TaskStatus.NEW));
         task = tm.getTask(task.getId());
         expectedArray.add(task);
         assertEquals(expectedArray, tm.getHistory());
-        Task task2 = tm.createTask(new Task("Задача2", "Описание2", Status.NEW));
+        Task task2 = tm.createTask(new Task("Задача2", "Описание2", TaskStatus.NEW));
         task2 = tm.getTask(task2.getId());
         expectedArray.add(task2);
         assertEquals(expectedArray, tm.getHistory());
@@ -60,7 +60,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void taskNameAndDescriptionUpdatedCorrectly() {
-        Task task = tm.createTask(new Task("Задача", "Описание", Status.NEW));
+        Task task = tm.createTask(new Task("Задача", "Описание", TaskStatus.NEW));
         task.setName("Новое имя задачи");
         task.setDescription("Новое описание задачи");
         tm.updateTask(task);
@@ -70,10 +70,10 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void inMemoryTaskManagerSetsIdCorrectly() {
-        Task taskId1 = tm.createTask(new Task("taskId1", "Задача с 1 id", Status.NEW));
+        Task taskId1 = tm.createTask(new Task("taskId1", "Задача с 1 id", TaskStatus.NEW));
         Epic epicId2 = tm.createEpic(new Epic("epicId2", "Эпик с 2 id"));
         Subtask subtaskId3 = tm.createSubtask(new Subtask ("subtaskId3", "Подзадача с 3 id",
-                Status.NEW, epicId2.getId()));
+                TaskStatus.NEW, epicId2.getId()));
         assertEquals(1, taskId1.getId());
         assertEquals(2, epicId2.getId());
         assertEquals(3, subtaskId3.getId());
@@ -81,7 +81,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void historyCantStoreSameTaskTwice() {
-        Task task = tm.createTask(new Task("task" , "Задача", Status.NEW));
+        Task task = tm.createTask(new Task("task" , "Задача", TaskStatus.NEW));
         hm.add(task);
         hm.add(task);
         assertEquals(1, hm.getHistory().size());
@@ -89,7 +89,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void tasksCanBeDeletedFromHistory() {
-        Task task = tm.createTask(new Task("task" , "Задача", Status.NEW));
+        Task task = tm.createTask(new Task("task" , "Задача", TaskStatus.NEW));
         hm.add(task);
         hm.remove(task.getId());
         assertEquals(0, hm.getHistory().size());

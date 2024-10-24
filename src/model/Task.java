@@ -1,17 +1,27 @@
 package model;
 
+import filecontrollers.TaskType;
+
 import java.util.Objects;
 
 public class Task {
     protected String name;
     protected String description;
     protected int id;
-    protected Status status;
+    protected TaskStatus taskStatus;
+    protected TaskType taskType;
 
-    public Task(String name, String description, Status status) {
+    public Task(String name, String description, TaskStatus taskStatus) {
         this.name = name;
         this.description = description;
-        this.status = status;
+        this.taskStatus = taskStatus;
+    }
+
+    public Task(String name, String description, TaskStatus taskStatus, int id) {
+        this.name = name;
+        this.description = description;
+        this.taskStatus = taskStatus;
+        this.id = id;
     }
 
     public String getName() {
@@ -38,12 +48,12 @@ public class Task {
         this.id = id;
     }
 
-    public Status getStatus() {
-        return status;
+    public TaskStatus getStatus() {
+        return taskStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
     }
 
     @Override
@@ -65,10 +75,15 @@ public class Task {
 
     @Override
     public String toString() {
+        return String.format("%d,%s,%s,%s,%s", id, taskType, name, taskStatus, description);
+    }
 
-        return "model.Task{name='" + name + "', "
-                + "description='" + description + "', "
-                + "id=" + id + ", "
-                + "status=" + status + "}";
+    public static Task getTaskFromFile(String fileString) {
+        String[] values = fileString.split(",");
+        int id = Integer.parseInt(values[0]);
+        String name = values[2];
+        TaskStatus taskStatus = TaskStatus.valueOf(values[3]);
+        String description = values[4];
+        return new Task(name, description, taskStatus, id);
     }
 }

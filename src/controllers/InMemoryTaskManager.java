@@ -1,7 +1,7 @@
 package controllers;
 
 import model.Epic;
-import model.Status;
+import model.TaskStatus;
 import model.Subtask;
 import model.Task;
 
@@ -13,12 +13,14 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final HistoryManager historyManager;
+    private final HistoryManager historyManager = Managers.getDefaultHistoryManager();
 
     private int taskIdCounter = 1;
 
-    public InMemoryTaskManager(HistoryManager historyManager) {
-        this.historyManager = historyManager;
+
+    @Override
+    public void setIdCounter(int newId) {
+        taskIdCounter = newId;
     }
 
     @Override
@@ -118,22 +120,22 @@ public class InMemoryTaskManager implements TaskManager {
             for (Integer id : epic.getSubtaskIdList()) {
                 Subtask subtask = subtasks.get(id);
                 if (subtask != null) {
-                    if (subtask.getStatus() == Status.IN_PROGRESS) {
-                        epic.setStatus(Status.IN_PROGRESS);
+                    if (subtask.getStatus() == TaskStatus.IN_PROGRESS) {
+                        epic.setStatus(TaskStatus.IN_PROGRESS);
                         return;
-                    } else if (subtask.getStatus() == Status.NEW) {
+                    } else if (subtask.getStatus() == TaskStatus.NEW) {
                         newTasks += 1;
-                    } else if (subtask.getStatus() == Status.DONE) {
+                    } else if (subtask.getStatus() == TaskStatus.DONE) {
                         doneTasks += 1;
                     }
                 }
             }
             if (newTasks == epic.getSubtaskIdList().size()) {
-                epic.setStatus(Status.NEW);
+                epic.setStatus(TaskStatus.NEW);
             } else if (doneTasks == epic.getSubtaskIdList().size()) {
-                epic.setStatus(Status.DONE);
+                epic.setStatus(TaskStatus.DONE);
             } else {
-                epic.setStatus(Status.IN_PROGRESS);
+                epic.setStatus(TaskStatus.IN_PROGRESS);
             }
         }
     }

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public interface TaskManager {
     ArrayList<Task> getHistory();
 
+    void setIdCounter(int id);
+
     Task createTask(Task task);
 
     Task getTask(int id);
