@@ -1,7 +1,7 @@
 package model;
 
-import filecontrollers.TaskType;
-
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -9,12 +9,18 @@ public class Task {
     protected String description;
     protected int id;
     protected TaskStatus taskStatus;
-    protected TaskType taskType;
+    protected TaskType taskType = TaskType.TASK;
+    protected Duration duration;
+    protected LocalDateTime startTime;
+    protected LocalDateTime endTime;
 
     public Task(String name, String description, TaskStatus taskStatus) {
         this.name = name;
         this.description = description;
         this.taskStatus = taskStatus;
+        this.duration = Duration.ZERO;
+        this.startTime = null;
+        this.endTime = null;
     }
 
     public Task(String name, String description, TaskStatus taskStatus, int id) {
@@ -22,6 +28,25 @@ public class Task {
         this.description = description;
         this.taskStatus = taskStatus;
         this.id = id;
+        this.duration = Duration.ZERO;
+        this.startTime = null;
+    }
+
+    public Task(String name, String description, TaskStatus taskStatus, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.taskStatus = taskStatus;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public Task(String name, String description, TaskStatus taskStatus, int id, Duration duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.taskStatus = taskStatus;
+        this.id = id;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getName() {
@@ -56,6 +81,41 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+    public LocalDateTime getEndTime() {
+        if (startTime != null && duration != null) {
+            return startTime.plus(duration);
+        } else {
+            return null;
+        }
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public boolean isOverlapping(Task other) {
+        if (this.startTime == null || other.startTime == null || this.duration == null || other.duration == null) {
+            return false;
+        }
+        LocalDateTime thisStart = this.getStartTime();
+        LocalDateTime thisEnd = this.getEndTime();
+        LocalDateTime otherStart = other.getStartTime();
+        LocalDateTime otherEnd = other.getEndTime();
+        return (thisStart.isBefore(otherEnd) && otherStart.isBefore(thisEnd));
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash();
@@ -75,7 +135,15 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s", id, taskType, name, taskStatus, description);
+        return String.format("%d,%s,%s,%s,%s,%d,%s",
+                id,
+                taskType.name(),
+                name,
+                taskStatus,
+                description,
+                duration.toMinutes(),
+                startTime
+        );
     }
 
     public static Task getTaskFromFile(String fileString) {
@@ -84,6 +152,8 @@ public class Task {
         String name = values[2];
         TaskStatus taskStatus = TaskStatus.valueOf(values[3]);
         String description = values[4];
-        return new Task(name, description, taskStatus, id);
+        Duration duration = Duration.ofMinutes(Long.parseLong(values[5]));
+        LocalDateTime startTime = LocalDateTime.parse(values[6]);
+        return new Task(name, description, taskStatus, id, duration, startTime);
     }
 }

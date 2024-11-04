@@ -1,6 +1,10 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
+    TaskType taskType = TaskType.SUBTASK;
     private final int epicId;
 
     public Subtask(String name, String description, TaskStatus status, int epicId) {
@@ -13,13 +17,37 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
+    public Subtask(String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime, int epicId) {
+        super(name, description, status, duration, startTime);
+        this.epicId = epicId;
+    }
+
+    public Subtask(String name, String description, TaskStatus status, int id, Duration duration, LocalDateTime startTime, int epicId) {
+        super(name, description, status, id, duration, startTime);
+        this.epicId = epicId;
+    }
+
     public int getEpicId() {
         return epicId;
     }
 
     @Override
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s,%d", id, taskType, name, taskStatus, description, epicId);
+        return String.format("%d,%s,%s,%s,%s,%d,%s,%d",
+                id,
+                taskType.name(),
+                name,
+                taskStatus,
+                description,
+                duration.toMinutes(),
+                startTime,
+                epicId
+        );
     }
 
     public static Subtask getSubtaskFromFile(String fileString) {
@@ -28,7 +56,9 @@ public class Subtask extends Task {
         String name = values[2];
         TaskStatus taskStatus = TaskStatus.valueOf(values[3]);
         String description = values[4];
-        int epicId = Integer.parseInt(values[5]);
-        return new Subtask(name, description, taskStatus, id, epicId);
+        Duration duration = Duration.ofMinutes(Long.parseLong(values[5]));
+        LocalDateTime startTime = LocalDateTime.parse(values[6]);
+        int epicId = Integer.parseInt(values[7]);
+        return new Subtask(name, description, taskStatus, id, duration, startTime, epicId);
     }
 }

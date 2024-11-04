@@ -5,8 +5,11 @@ import model.Epic;
 import model.Subtask;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public interface TaskManager {
+    Collection<Task> getPrioritizedTasks();
+
     ArrayList<Task> getHistory();
 
     void setIdCounter(int id);
