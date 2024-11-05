@@ -171,7 +171,12 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeEpic(int id) {
         Epic epic = epics.remove(id);
         if (epic != null) {
-            epic.getSubtaskList().forEach(subtask -> subtasks.remove(subtask.getId()));
+            epic.getSubtaskList().stream()
+                    .map(Subtask::getId)
+                    .forEach(subtaskId -> {
+                        subtasks.remove(subtaskId);
+                        prioritizedTasks.remove(subtasks.get(subtaskId));
+                    });
         }
     }
 
@@ -239,10 +244,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeSubtask(int id) {
-        final Subtask subtask = subtasks.remove(id);
-        Epic epic = epics.get(subtask.getEpicId());
-        epic.removeSubtask(subtask);
-        updateEpicStatus(epic);
+        Subtask subtask = subtasks.remove(id);
+        if (subtask != null) {
+            prioritizedTasks.remove(subtask);
+            Epic epic = epics.get(subtask.getEpicId());
+            if (epic != null) {
+                epic.removeSubtask(subtask);
+                updateEpicStatus(epic);
+                epic.calculateEpicTimes();
+            }
+        }
     }
 
     @Override
