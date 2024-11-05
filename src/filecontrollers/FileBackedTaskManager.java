@@ -53,8 +53,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-            bw.write("id,type,name,status,description,epic");
-            for (Task task : getTasksList()) {
+            bw.write("id,type,name,status,description,duration,startTime,epic\n"); // В ТЗ не указан новый хэдер,
+            for (Task task : getTasksList()) {                                     // поэтому изменил его на свой взгляд
                 bw.write(task.toString() + "\n");
             }
             for (Epic epic : getEpicsList()) {

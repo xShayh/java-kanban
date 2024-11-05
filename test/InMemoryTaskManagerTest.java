@@ -8,6 +8,8 @@ import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,7 +74,7 @@ class InMemoryTaskManagerTest {
     public void inMemoryTaskManagerSetsIdCorrectly() {
         Task taskId1 = tm.createTask(new Task("taskId1", "Задача с 1 id", TaskStatus.NEW));
         Epic epicId2 = tm.createEpic(new Epic("epicId2", "Эпик с 2 id"));
-        Subtask subtaskId3 = tm.createSubtask(new Subtask ("subtaskId3", "Подзадача с 3 id",
+        Subtask subtaskId3 = tm.createSubtask(new Subtask("subtaskId3", "Подзадача с 3 id",
                 TaskStatus.NEW, epicId2.getId()));
         assertEquals(1, taskId1.getId());
         assertEquals(2, epicId2.getId());
@@ -81,7 +83,7 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void historyCantStoreSameTaskTwice() {
-        Task task = tm.createTask(new Task("task" , "Задача", TaskStatus.NEW));
+        Task task = tm.createTask(new Task("task", "Задача", TaskStatus.NEW));
         hm.add(task);
         hm.add(task);
         assertEquals(1, hm.getHistory().size());
@@ -89,9 +91,22 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void tasksCanBeDeletedFromHistory() {
-        Task task = tm.createTask(new Task("task" , "Задача", TaskStatus.NEW));
+        Task task = tm.createTask(new Task("task", "Задача", TaskStatus.NEW));
         hm.add(task);
         hm.remove(task.getId());
         assertEquals(0, hm.getHistory().size());
+    }
+
+    @Test
+    public void testOverlappingThrowsIllegalArgumentException() {
+        Epic epic = tm.createEpic(new Epic("Epic Task", "Description of epic task"));
+        Subtask subtask1 = tm.createSubtask(new Subtask("Subtask 1", "First subtask", TaskStatus.NEW,
+                Duration.ofMinutes(10), LocalDateTime.parse("2024-11-03T10:00:00"), epic.getId()));
+        Subtask subtask2 = tm.createSubtask(new Subtask("Subtask 2", "Second subtask", TaskStatus.NEW,
+                Duration.ofMinutes(15), LocalDateTime.parse("2024-11-03T11:00:00"), epic.getId()));
+        subtask1.setStartTime(LocalDateTime.parse("2024-11-03T10:55:00"));
+
+        assertThrows(IllegalArgumentException.class, () -> tm.updateSubtask(subtask1),
+                "Подзадача должна вызывать исключение при пересечении времени с другой задачей");
     }
 }
