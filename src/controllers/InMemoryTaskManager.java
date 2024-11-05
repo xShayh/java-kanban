@@ -17,7 +17,6 @@ public class InMemoryTaskManager implements TaskManager {
     private int taskIdCounter = 1;
 
     protected final TreeSet<Task> prioritizedTasks = new TreeSet<>((task1, task2) -> {
-        if (task1 == null || task2 == null) return 0;
         if (task1.getStartTime() == null && task2.getStartTime() == null) return 0;
         if (task1.getStartTime() == null) return 1;
         if (task2.getStartTime() == null) return -1;
