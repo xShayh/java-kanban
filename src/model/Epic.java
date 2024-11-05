@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Epic extends Task {
-    TaskType taskType = TaskType.EPIC;
+    private final TaskType taskType = TaskType.EPIC;
     private final ArrayList<Subtask> subtaskList;
 
     public Epic(String name, String description) {
@@ -63,29 +63,25 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getEndTime() {
-        LocalDateTime endTime = null;
+        this.endTime = null;
         for (Subtask subtask : subtaskList) {
-            if (endTime == null || subtask.getEndTime().isAfter(endTime)) {
-                endTime = subtask.getEndTime();
+            if (subtask.getEndTime() != null &&
+                    (this.endTime == null || this.endTime.isBefore(subtask.getEndTime()))) {
+                this.endTime = subtask.getEndTime();
             }
         }
-        return endTime;
+        return this.endTime;
     }
 
     public void calculateEpicTimes() {
         this.duration = Duration.ZERO;
         this.startTime = null;
-        this.endTime = null;
+        this.endTime = this.getEndTime();
         for (Subtask subtask : subtaskList) {
             this.duration = this.duration.plus(subtask.getDuration());
             if (subtask.getStartTime() != null &&
                     (this.startTime == null || this.startTime.isAfter(subtask.getStartTime()))) {
                 this.startTime = subtask.getStartTime();
-            }
-
-            if (subtask.getEndTime() != null &&
-                    (this.endTime == null || this.endTime.isBefore(subtask.getEndTime()))) {
-                this.endTime = subtask.getEndTime();
             }
         }
     }
