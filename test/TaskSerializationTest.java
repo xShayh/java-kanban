@@ -1,6 +1,7 @@
 import adapters.DurationTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import controllers.Managers;
 import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.Test;
@@ -14,11 +15,10 @@ import java.time.LocalDateTime;
 
 public class TaskSerializationTest {
 
-    private final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
-            .registerTypeAdapter(Task.class, new TaskSerializer())
-            .registerTypeAdapter(Task.class, new TaskDeserializer())
-            .create();
+    private final Gson gson = Managers.getDefaultGson(gsonBuilder -> {
+        gsonBuilder.registerTypeAdapter(Task.class, new TaskSerializer());
+        gsonBuilder.registerTypeAdapter(Task.class, new TaskDeserializer());
+    });
 
     @Test
     public void testTaskSerialization() {

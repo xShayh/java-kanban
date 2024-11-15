@@ -105,7 +105,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic createEpic(Epic epic) {
         epic.setId(taskIdCounter);
-        //epic.removeAllSubtasks();
         epics.put(taskIdCounter, epic);
         taskIdCounter++;
         return epic;

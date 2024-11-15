@@ -8,6 +8,9 @@ import com.sun.net.httpserver.HttpServer;
 import controllers.Managers;
 import controllers.TaskManager;
 import handlers.*;
+import model.Task;
+import serializers.TaskDeserializer;
+import serializers.TaskSerializer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -23,10 +26,7 @@ public class TaskServer {
     public TaskServer(int port) {
         this.port = port;
         taskManager = Managers.getDefault();
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(Duration.class, new DurationTypeAdapter())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
-                .create();
+        this.gson = Managers.getDefaultGson(null);
     }
 
     public void start() throws IOException {

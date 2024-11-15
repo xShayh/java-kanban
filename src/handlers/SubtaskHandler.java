@@ -57,12 +57,18 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                     if (hasOverlap) {
                         throw new NotAcceptableException("Подзадача пересекается по времени с существующей задачей");
                     }
-                    if (newSubtask.getId() != null && newSubtask.getId() != 0) {
-                        taskManager.updateSubtask(newSubtask);
-                        sendText(exchange, gson.toJson(newSubtask), 200);
+                    boolean epicExists = taskManager.getEpicsList().stream()
+                            .anyMatch(epic -> epic.getId().equals(newSubtask.getEpicId()));
+                    if (epicExists) {
+                        if (newSubtask.getId() != null && newSubtask.getId() != 0) {
+                            taskManager.updateSubtask(newSubtask);
+                            sendText(exchange, gson.toJson(newSubtask), 200);
+                        } else {
+                            taskManager.createSubtask(newSubtask);
+                            sendText(exchange, gson.toJson(newSubtask), 201);
+                        }
                     } else {
-                        taskManager.createSubtask(newSubtask);
-                        sendText(exchange, gson.toJson(newSubtask), 201);
+                        throw new NotFoundException("Эпик не найден");
                     }
                     break;
                 case "DELETE":
