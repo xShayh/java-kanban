@@ -1,16 +1,19 @@
 package model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Epic extends Task {
+    @SerializedName("epic_type")
     private final TaskType taskType = TaskType.EPIC;
-    private final ArrayList<Subtask> subtaskList;
+    private ArrayList<Subtask> subtaskList;
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
-        this.subtaskList = new ArrayList<>();
+        setSubtaskList();
         this.duration = Duration.ZERO;
         this.startTime = null;
         this.endTime = null;
@@ -18,7 +21,7 @@ public class Epic extends Task {
 
     public Epic(String name, String description, int id) {
         super(name, description, TaskStatus.NEW, id);
-        this.subtaskList = new ArrayList<>();
+        setSubtaskList();
         this.duration = Duration.ZERO;
         this.startTime = null;
         this.endTime = null;
@@ -34,24 +37,28 @@ public class Epic extends Task {
 
     public Epic(String name, String description, int id, Duration duration, LocalDateTime startTime) {
         super(name, description, TaskStatus.NEW, id);
-        this.subtaskList = new ArrayList<>();
+        setSubtaskList();
         this.duration = duration;
         this.startTime = startTime;
         this.endTime = this.getEndTime();
     }
 
     public void addSubtask(Subtask subtask) {
-        subtaskList.add(subtask);
+        this.subtaskList.add(subtask);
         calculateEpicTimes();
     }
 
     public void removeSubtask(Subtask subtask) {
-        subtaskList.remove(subtask);
+        this.subtaskList.remove(subtask);
         calculateEpicTimes();
     }
 
     public ArrayList<Subtask> getSubtaskList() {
         return subtaskList;
+    }
+
+    public void setSubtaskList() {
+        this.subtaskList = new ArrayList<>();
     }
 
     public void removeAllSubtasks() {

@@ -1,5 +1,7 @@
 package model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -9,6 +11,7 @@ public class Task {
     protected String description;
     protected int id;
     protected TaskStatus taskStatus;
+    @SerializedName("task_type")
     private final TaskType taskType = TaskType.TASK;
     protected Duration duration;
     protected LocalDateTime startTime;
@@ -65,7 +68,11 @@ public class Task {
         this.description = description;
     }
 
-    public int getId() {
+    public TaskType getType() {
+        return taskType;
+    }
+
+    public Integer getId() {
         return id;
     }
 

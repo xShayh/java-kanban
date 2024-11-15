@@ -83,9 +83,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeTask(int id) {
+    public boolean removeTask(int id) {
         super.removeTask(id);
         save();
+        return true;
     }
 
     @Override
@@ -108,9 +109,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeEpic(int id) {
+    public boolean removeEpic(int id) {
         super.removeEpic(id);
         save();
+        return true;
     }
 
     @Override
@@ -133,9 +135,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void removeSubtask(int id) {
+    public boolean removeSubtask(int id) {
         super.removeSubtask(id);
         save();
+        return true;
     }
 
     @Override

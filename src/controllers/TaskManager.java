@@ -22,7 +22,7 @@ public interface TaskManager {
 
     void updateTask(Task task);
 
-    void removeTask(int id);
+    boolean removeTask(int id);
 
     void clearTasksList();
 
@@ -38,7 +38,7 @@ public interface TaskManager {
 
     void updateEpicStatus(Epic epic);
 
-    void removeEpic(int id);
+    boolean removeEpic(int id);
 
     void clearEpicsList();
 
@@ -50,7 +50,7 @@ public interface TaskManager {
 
     void updateSubtask(Subtask subtask);
 
-    void removeSubtask(int id);
+    boolean removeSubtask(int id);
 
     void clearSubtasksList();
 }

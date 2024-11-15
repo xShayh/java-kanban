@@ -1,9 +1,12 @@
 package model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Subtask extends Task {
+    @SerializedName("subtask_type")
     private final TaskType taskType = TaskType.SUBTASK;
     private final int epicId;
 
