@@ -1,21 +1,13 @@
 package server;
 
-import adapters.DurationTypeAdapter;
-import adapters.LocalDateTimeTypeAdapter;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import controllers.Managers;
 import controllers.TaskManager;
 import handlers.*;
-import model.Task;
-import serializers.TaskDeserializer;
-import serializers.TaskSerializer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class TaskServer {
     private final int port;
